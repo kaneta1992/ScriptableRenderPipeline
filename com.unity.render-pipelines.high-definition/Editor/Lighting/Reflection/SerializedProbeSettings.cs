@@ -31,6 +31,7 @@ namespace UnityEditor.Rendering.HighDefinition
         internal SerializedProperty lightingMultiplier;
         internal SerializedProperty lightingWeight;
         internal SerializedProperty lightingLightLayer;
+        internal SerializedProperty lightingExposure;
         internal SerializedProperty proxyUseInfluenceVolumeAsProxyVolume;
         internal SerializedProperty proxyCapturePositionProxySpace;
         internal SerializedProperty proxyCaptureRotationProxySpace;
@@ -52,6 +53,7 @@ namespace UnityEditor.Rendering.HighDefinition
             lightingMultiplier = root.FindPropertyRelative("lighting.multiplier");
             lightingWeight = root.FindPropertyRelative("lighting.weight");
             lightingLightLayer = root.FindPropertyRelative("lighting.lightLayer");
+            lightingExposure = root.FindPropertyRelative("lighting.customExposure");
             proxyUseInfluenceVolumeAsProxyVolume = root.FindPropertyRelative("proxySettings.useInfluenceVolumeAsProxyVolume");
             proxyCapturePositionProxySpace = root.FindPropertyRelative("proxySettings.capturePositionProxySpace");
             proxyCaptureRotationProxySpace = root.FindPropertyRelative("proxySettings.captureRotationProxySpace");

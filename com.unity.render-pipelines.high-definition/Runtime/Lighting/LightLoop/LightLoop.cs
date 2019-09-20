@@ -1686,6 +1686,7 @@ namespace UnityEngine.Rendering.HighDefinition
             envLightData.influenceShapeType = influence.envShape;
             envLightData.weight = probe.weight;
             envLightData.multiplier = probe.multiplier * m_indirectLightingController.indirectSpecularIntensity.value;
+            envLightData.invExposureMultiplier = 1.0f / ColorUtils.ConvertEV100ToExposure(probe.customExposure);
             envLightData.influenceExtents = influence.extents;
             switch (influence.envShape)
             {

@@ -90,6 +90,9 @@ namespace UnityEngine.Rendering.HighDefinition
                 );
             }
 
+            // Propagate the desired custom exposure
+            cameraSettings.probeCustomExposure = settings.lighting.customExposure;
+
             // Frame Settings Overrides
             switch (settings.mode)
             {

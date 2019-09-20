@@ -634,7 +634,7 @@ IndirectLighting EvaluateBSDF_Env(  LightLoopContext lightLoopContext,
         sliceIndex = _EnvSliceSize - 1;
     }
 
-    float4 preLD = SampleEnv(lightLoopContext, lightData.envIndex, R, iblMipLevel, sliceIndex);
+    float4 preLD = SampleEnv(lightLoopContext, lightData.envIndex, R, iblMipLevel, lightData.invExposureMultiplier, sliceIndex);
     weight *= preLD.a; // Used by planar reflection to discard pixel
 
     envLighting = preLightData.specularFGD * preLD.rgb;

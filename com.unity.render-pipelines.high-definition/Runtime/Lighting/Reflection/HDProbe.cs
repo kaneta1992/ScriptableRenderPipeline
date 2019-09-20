@@ -172,6 +172,10 @@ namespace UnityEngine.Rendering.HighDefinition
         /// <summary>Weight for blending amongst probes (non PBR parameter).</summary>
         public float weight
         { get => m_ProbeSettings.lighting.weight; set => m_ProbeSettings.lighting.weight = value; }
+        /// <summary>Exposure value (EV100) to be used for rendering the probe</summary>
+        public float customExposure
+        { get => m_ProbeSettings.lighting.customExposure; set => m_ProbeSettings.lighting.customExposure = value; }
+
 
         // Proxy
         /// <summary>ProxyVolume currently used by this probe.</summary>

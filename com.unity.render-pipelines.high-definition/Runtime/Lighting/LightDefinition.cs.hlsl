@@ -137,6 +137,7 @@ struct EnvLightData
     real3 boxSideFadeNegative;
     float weight;
     float multiplier;
+    float invExposureMultiplier;
     int envIndex;
 };
 

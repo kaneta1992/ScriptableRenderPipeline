@@ -15,7 +15,8 @@ namespace UnityEditor.Rendering.HighDefinition
         {
             const ProbeSettingsFields lighting = ProbeSettingsFields.lightingLightLayer
                 | ProbeSettingsFields.lightingMultiplier
-                | ProbeSettingsFields.lightingWeight;
+                | ProbeSettingsFields.lightingWeight
+                | ProbeSettingsFields.lightingExposure;
             const ProbeSettingsFields proxy = ProbeSettingsFields.proxyCapturePositionProxySpace
                 | ProbeSettingsFields.proxyCaptureRotationProxySpace
                 | ProbeSettingsFields.proxyMirrorPositionProxySpace
@@ -39,6 +40,7 @@ namespace UnityEditor.Rendering.HighDefinition
                 GUI.enabled = true;
                 PropertyFieldWithFlagToggleIfDisplayed(ProbeSettingsFields.lightingMultiplier, serialized.lightingMultiplier, EditorGUIUtility.TrTextContent("Multiplier", "Sets the multiplier value that reflective Materials apply to the results from the Reflection Probe."), @override.probe, displayedFields.probe, overridableFields.probe);
                 PropertyFieldWithFlagToggleIfDisplayed(ProbeSettingsFields.lightingWeight, serialized.lightingWeight, EditorGUIUtility.TrTextContent("Weight", "Sets the weight of this Reflection Probe. When multiple Probes both affect the same area of a reflective Material, the Material uses the Weight of each Probe to determine their contribution to the reflective effect."), @override.probe, displayedFields.probe, overridableFields.probe);
+                PropertyFieldWithFlagToggleIfDisplayed(ProbeSettingsFields.lightingExposure, serialized.lightingExposure, EditorGUIUtility.TrTextContent("Exposure", "Set the exposure value (EV100) to be used when rendering the probe content."), @override.probe, displayedFields.probe, overridableFields.probe);
                 EditorGUILayout.Space();
             }
 
