@@ -43,6 +43,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed the SetLightLayer function in HDAdditionalLightData setting the wrong light layer
 - Fix error first time a preview is created for planar
 - Fixed an issue where SSR would use an incorrect roughness value on ForwardOnly (StackLit, AxF, Fabric, etc.) materials when the pipeline is configured to also allow deferred Lit.
+- Fixed fov to 0 in planar probe breaking the projection matrix (case 1182014)
 
 ### Changed
 - Color buffer pyramid is not allocated anymore if neither refraction nor distortion are enabled
