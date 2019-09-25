@@ -278,6 +278,17 @@ namespace UnityEditor.Rendering.HighDefinition
             m_DefaultScene.SetValueWithoutNotify(HDProjectSettings.defaultScenePrefab);
         }
 
+        bool IsDefaultVolumeProfileAssigned()
+        {
+            var hdAsset = GraphicsSettings.renderPipelineAsset as HDRenderPipelineAsset;
+            return hdAsset.defaultVolumeProfile != null && !hdAsset.defaultVolumeProfile.Equals(null);
+        }
+        void FixDefaultVolumeProfileAssigned()
+        {
+            var hdAsset = GraphicsSettings.renderPipelineAsset as HDRenderPipelineAsset;
+            EditorDefaultSettings.GetOrAssignDefaultVolumeProfile(hdAsset);
+        }
+
         #endregion
 
         #region HDRP_VR_FIXES
