@@ -1355,7 +1355,7 @@ namespace UnityEngine.Rendering.HighDefinition
                         for (int i = 0; i < visibleInIndices.Count; ++i)
                         {
                             var visibleInIndex = visibleInIndices[i];
-                            var visibleInRenderRequest = renderRequests[visibleInIndices[i]];
+                            var visibleInRenderRequest = renderRequests[visibleInIndex];
                             var viewerTransform = visibleInRenderRequest.hdCamera.camera.transform;
 
                             float distanceToCamera = Vector3.Magnitude(visibleProbe.transform.position - viewerTransform.position);
@@ -1373,7 +1373,23 @@ namespace UnityEngine.Rendering.HighDefinition
                         }
                     }
                     else
-                        AddHDProbeRenderRequests(visibleProbe, null, visibleInIndices);
+                    {
+                        bool visibleInOneViewer = false;
+                        for (int i = 0; i < visibleInIndices.Count && !visibleInOneViewer; ++i)
+                        {
+                            var visibleInIndex = visibleInIndices[i];
+                            var visibleInRenderRequest = renderRequests[visibleInIndex];
+                            var viewerTransform = visibleInRenderRequest.hdCamera.camera.transform;
+
+                            float distanceToCamera = Vector3.Magnitude(visibleProbe.transform.position - viewerTransform.position);
+                            float distanceFade = HDUtils.ComputeLinearDistanceFade(distanceToCamera, visibleProbe.fadeDistance);
+                            float visibility = distanceFade * visibleProbe.weight;
+                            if (visibility > 0f)
+                                visibleInOneViewer = true;
+                        }
+                        if (visibleInOneViewer)
+                            AddHDProbeRenderRequests(visibleProbe, null, visibleInIndices);
+                    }
                 }
                 foreach (var pair in renderRequestIndicesWhereTheProbeIsVisible)
                     ListPool<int>.Release(pair.Value);
