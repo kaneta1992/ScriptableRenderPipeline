@@ -1353,10 +1353,16 @@ namespace UnityEngine.Rendering.HighDefinition
                     if (isViewDependent)
                     {
                         for (int i = 0; i < visibleInIndices.Count; ++i)
-                    {
+                        {
                             var visibleInIndex = visibleInIndices[i];
                             var visibleInRenderRequest = renderRequests[visibleInIndices[i]];
                             var viewerTransform = visibleInRenderRequest.hdCamera.camera.transform;
+
+                            float distanceToCamera = Vector3.Magnitude(visibleProbe.transform.position - viewerTransform.position);
+                            float distanceFade = HDUtils.ComputeLinearDistanceFade(distanceToCamera, visibleProbe.fadeDistance);
+                            float visibility = distanceFade * visibleProbe.weight;
+                            if (visibility <= 0f)
+                                continue;
 
                             AddHDProbeRenderRequests(
                                 visibleProbe,
