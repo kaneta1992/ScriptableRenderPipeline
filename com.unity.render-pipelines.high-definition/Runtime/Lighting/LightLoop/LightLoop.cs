@@ -3301,7 +3301,7 @@ namespace UnityEngine.Rendering.HighDefinition
             }
             else
             {
-                CoreUtils.SetKeyword(cmd, "DEBUG_DISPLAY", true/* parameters.debugDisplaySettings.IsDebugDisplayEnabled()*/);
+                CoreUtils.SetKeyword(cmd, "DEBUG_DISPLAY", parameters.debugDisplaySettings.IsDebugDisplayEnabled());
 
                 if (outputSplitLighting)
                     CoreUtils.DrawFullScreen(cmd, deferredMat, resources.colorBuffers, resources.depthStencilBuffer, null, 1);
