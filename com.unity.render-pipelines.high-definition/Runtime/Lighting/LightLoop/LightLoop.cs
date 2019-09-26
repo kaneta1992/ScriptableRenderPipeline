@@ -1622,6 +1622,13 @@ namespace UnityEngine.Rendering.HighDefinition
             if (!debugDisplaySettings.data.lightingDebugSettings.showReflectionProbe)
                 return false;
 
+            // Discard probe if its distance is too far or if its weight is at 0
+            float distanceToCamera = Vector3.Magnitude(probe.transform.position - camera.transform.position);
+            float distanceFade = HDUtils.ComputeLinearDistanceFade(distanceToCamera, probe.fadeDistance);
+            float weight = distanceFade * probe.weight;
+            if (weight <= 0f)
+                return false;
+
             var capturePosition = Vector3.zero;
             var influenceToWorld = probe.influenceToWorld;
 
@@ -1681,13 +1688,10 @@ namespace UnityEngine.Rendering.HighDefinition
             if (envIndex == int.MinValue)
                 return false;
 
-            float distanceToCamera = Vector3.Magnitude(probe.transform.position - camera.transform.position);
-            float distanceFade = HDUtils.ComputeLinearDistanceFade(distanceToCamera, probe.fadeDistance);
-
             InfluenceVolume influence = probe.influenceVolume;
             envLightData.lightLayers = probe.lightLayersAsUInt;
             envLightData.influenceShapeType = influence.envShape;
-            envLightData.weight = distanceFade * probe.weight;
+            envLightData.weight = weight;
             envLightData.multiplier = probe.multiplier * m_indirectLightingController.indirectSpecularIntensity.value;
             envLightData.influenceExtents = influence.extents;
             switch (influence.envShape)
