@@ -394,15 +394,15 @@ namespace UnityEngine.Rendering.HighDefinition
             return false;
         }
 
-        internal void InvalidateCachedData(ShadowMapType type)
+        internal void PruneEmptyCachedSlots(ShadowMapType type)
         {
             switch (type)
             {
                 case ShadowMapType.PunctualAtlas:
-                    m_Atlas.frameOfCacheValidity = 0;
+                    m_Atlas.PruneDeadCachedLightSlots();
                     break;
                 case ShadowMapType.AreaLightAtlas:
-                    m_Atlas.frameOfCacheValidity = 0;
+                    m_Atlas.PruneDeadCachedLightSlots();
                     break;
                 default:
                     break;

@@ -1470,7 +1470,7 @@ namespace UnityEngine.Rendering.HighDefinition
                                               (legacyLight.type != LightType.Directional) ? ShadowMapType.PunctualAtlas : ShadowMapType.CascadedDirectional;
 
                 HDShadowManager.instance.MarkCachedShadowSlotsAsEmpty(shadowMapType, GetInstanceID());
-                HDShadowManager.instance.InvalidateCachedData(shadowMapType);
+                HDShadowManager.instance.PruneEmptyCachedSlots(shadowMapType);  // We invalidate it all to be sure.
                 m_ShadowMapRenderedSinceLastRequest = false;
             }
         }
