@@ -1150,7 +1150,7 @@ namespace UnityEngine.Rendering.HighDefinition
 
             using (ListPool<RenderRequest>.Get(out List<RenderRequest> renderRequests))
             using (ListPool<int>.Get(out List<int> rootRenderRequestIndices))
-            using (DictionaryPool<HDProbe, List<int>>.Get(out Dictionary<HDProbe, List<int>> renderRequestIndicesWhereTheProbeIsVisible))
+            using (DictionaryPool<HDProbe, List<(int index, float weight)>>.Get(out Dictionary<HDProbe, List<(int index, float weight)>> renderRequestIndicesWhereTheProbeIsVisible))
             using (ListPool<CameraSettings>.Get(out List<CameraSettings> cameraSettings))
             using (ListPool<CameraPositionSettings>.Get(out List<CameraPositionSettings> cameraPositionSettings))
             {
@@ -1328,20 +1328,29 @@ namespace UnityEngine.Rendering.HighDefinition
                         // Notify that we render the probe at this frame
                         probe.SetIsRendered(Time.frameCount);
 
+                        float visibility = ComputeVisibility(visibleInIndex, probe);
+
                         if (!renderRequestIndicesWhereTheProbeIsVisible.TryGetValue(probe, out var visibleInIndices))
                         {
-                            visibleInIndices = ListPool<int>.Get();
+                            visibleInIndices = ListPool<(int index, float weight)>.Get();
                             renderRequestIndicesWhereTheProbeIsVisible.Add(probe, visibleInIndices);
                         }
-                        if (!visibleInIndices.Contains(visibleInIndex))
-                            visibleInIndices.Add(visibleInIndex);
+                        if (!visibleInIndices.Contains((visibleInIndex, visibility)))
+                            visibleInIndices.Add((visibleInIndex, visibility));
+                    }
+
+                    float ComputeVisibility(int visibleInIndex, HDProbe visibleProbe)
+                    {
+                        var visibleInRenderRequest = renderRequests[visibleInIndex];
+                        var viewerTransform = visibleInRenderRequest.hdCamera.camera.transform;
+                        return HDUtils.ComputeWeightedLinearFadeDistance(visibleProbe.transform.position, viewerTransform.position, visibleProbe.weight, visibleProbe.fadeDistance);
                     }
                 }
 
                 foreach (var probeToRenderAndDependencies in renderRequestIndicesWhereTheProbeIsVisible)
                 {
                     var visibleProbe = probeToRenderAndDependencies.Key;
-                    var visibleInIndices = probeToRenderAndDependencies.Value;
+                    var visibilities = probeToRenderAndDependencies.Value;
 
                     // Two cases:
                     //   - If the probe is view independent, we add only one render request per face that is
@@ -1352,22 +1361,20 @@ namespace UnityEngine.Rendering.HighDefinition
 
                     if (isViewDependent)
                     {
-                        for (int i = 0; i < visibleInIndices.Count; ++i)
+                        for (int i = 0; i < visibilities.Count; ++i)
                         {
-                            var visibleInIndex = visibleInIndices[i];
+                            var visibility = visibilities[i];
+                            if (visibility.weight <= 0f)
+                                continue;
+
+                            var visibleInIndex = visibility.index;
                             var visibleInRenderRequest = renderRequests[visibleInIndex];
                             var viewerTransform = visibleInRenderRequest.hdCamera.camera.transform;
-
-                            float distanceToCamera = Vector3.Magnitude(visibleProbe.transform.position - viewerTransform.position);
-                            float distanceFade = HDUtils.ComputeLinearDistanceFade(distanceToCamera, visibleProbe.fadeDistance);
-                            float visibility = distanceFade * visibleProbe.weight;
-                            if (visibility <= 0f)
-                                continue;
 
                             AddHDProbeRenderRequests(
                                 visibleProbe,
                                 viewerTransform,
-                                Enumerable.Repeat(visibleInIndex, 1),
+                                Enumerable.Repeat(visibility, 1),
                                 visibleInRenderRequest.hdCamera.camera.fieldOfView
                             );
                         }
@@ -1375,31 +1382,24 @@ namespace UnityEngine.Rendering.HighDefinition
                     else
                     {
                         bool visibleInOneViewer = false;
-                        for (int i = 0; i < visibleInIndices.Count && !visibleInOneViewer; ++i)
+                        for (int i = 0; i < visibilities.Count && !visibleInOneViewer; ++i)
                         {
-                            var visibleInIndex = visibleInIndices[i];
-                            var visibleInRenderRequest = renderRequests[visibleInIndex];
-                            var viewerTransform = visibleInRenderRequest.hdCamera.camera.transform;
-
-                            float distanceToCamera = Vector3.Magnitude(visibleProbe.transform.position - viewerTransform.position);
-                            float distanceFade = HDUtils.ComputeLinearDistanceFade(distanceToCamera, visibleProbe.fadeDistance);
-                            float visibility = distanceFade * visibleProbe.weight;
-                            if (visibility > 0f)
+                            if (visibilities[i].weight > 0f)
                                 visibleInOneViewer = true;
                         }
                         if (visibleInOneViewer)
-                            AddHDProbeRenderRequests(visibleProbe, null, visibleInIndices);
+                            AddHDProbeRenderRequests(visibleProbe, null, visibilities);
                     }
                 }
                 foreach (var pair in renderRequestIndicesWhereTheProbeIsVisible)
-                    ListPool<int>.Release(pair.Value);
+                    ListPool<(int index, float weight)>.Release(pair.Value);
                 renderRequestIndicesWhereTheProbeIsVisible.Clear();
 
                 // Local function to share common code between view dependent and view independent requests
                 void AddHDProbeRenderRequests(
                     HDProbe visibleProbe,
                     Transform viewerTransform,
-                    IEnumerable<int> visibleInIndices,
+                    IEnumerable<(int index, float weight)> visibilities,
                     float referenceFieldOfView = 90
                 )
                 {
@@ -1540,8 +1540,8 @@ namespace UnityEngine.Rendering.HighDefinition
                         renderRequests.Add(request);
 
 
-                        foreach (var visibleInIndex in visibleInIndices)
-                            renderRequests[visibleInIndex].dependsOnRenderRequestIndices.Add(request.index);
+                        foreach (var visibility in visibilities)
+                            renderRequests[visibility.index].dependsOnRenderRequestIndices.Add(request.index);
                     }
                 }
 
