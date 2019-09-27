@@ -188,7 +188,6 @@ namespace UnityEngine.Rendering.HighDefinition
         public Rect             atlasViewport;
         public Vector2          resolution;
         public ShadowMapType    shadowMapType;
-        public string name;
 
         /* Data for cached shadows */
         public int              lightID;
@@ -301,7 +300,7 @@ namespace UnityEngine.Rendering.HighDefinition
             m_CascadeAtlas.UpdateSize(atlasResolution);
         }
 
-        internal int ReserveShadowResolutions(Vector2 resolution, ShadowMapType shadowMapType, int lightID, int index, bool canBeCached, string name, out int cachedRequestIdx)
+        internal int ReserveShadowResolutions(Vector2 resolution, ShadowMapType shadowMapType, int lightID, int index, bool canBeCached, out int cachedRequestIdx)
         {
             cachedRequestIdx = -1;
             if (m_ShadowRequestCount >= m_MaxShadowRequests)
@@ -327,9 +326,6 @@ namespace UnityEngine.Rendering.HighDefinition
             {
                 m_ShadowResolutionRequests[m_ShadowResolutionRequestCounter].hasBeenStoredInCachedList = false;
             }
-
-            m_ShadowResolutionRequests[m_ShadowResolutionRequestCounter].name = name;
-
 
             switch (shadowMapType)
             {

@@ -1629,7 +1629,7 @@ namespace UnityEngine.Rendering.HighDefinition
             }
 
             viewportSize = Vector2.Max(viewportSize, new Vector2(HDShadowManager.k_MinShadowMapResolution, HDShadowManager.k_MinShadowMapResolution));
-             
+
             // Update the directional shadow atlas size
             if (legacyLight.type == LightType.Directional)
                 shadowManager.UpdateDirectionalShadowResolution((int)viewportSize.x, m_ShadowSettings.cascadeShadowSplitCount.value);
@@ -1637,14 +1637,9 @@ namespace UnityEngine.Rendering.HighDefinition
             int count = GetShadowRequestCount();
             bool needsCachedSlotsInAtlas = shadowsAreCached && !(ShadowIsUpdatedEveryFrame() || legacyLight.type == LightType.Directional);
 
-            if(gameObject.name.Contains("Cauldron"))
-            {
-                Debug.Log(m_ShadowMapRenderedSinceLastRequest);
-            }
-
             for (int index = 0; index < count; index++)
             {
-                m_ShadowRequestIndices[index] = shadowManager.ReserveShadowResolutions(needsCachedSlotsInAtlas ? new Vector2(resolution, resolution) : viewportSize, shadowMapType, GetInstanceID(), index, needsCachedSlotsInAtlas, gameObject.name, out m_CachedResolutionRequestIndices[index]);
+                m_ShadowRequestIndices[index] = shadowManager.ReserveShadowResolutions(needsCachedSlotsInAtlas ? new Vector2(resolution, resolution) : viewportSize, shadowMapType, GetInstanceID(), index, needsCachedSlotsInAtlas, out m_CachedResolutionRequestIndices[index]);
             }
         }
 
@@ -1748,14 +1743,6 @@ namespace UnityEngine.Rendering.HighDefinition
             bool cachedDataIsValid = shadowIsCached && m_CachedDataIsValid && (manager.GetAtlasShapeID(shadowMapType) == m_AtlasShapeID) && manager.CachedDataIsValid(shadowMapType);
             cachedDataIsValid = cachedDataIsValid || (legacyLight.type == LightType.Directional);
             shadowIsCached = shadowIsCached && (hasCachedSlotInAtlas && cachedDataIsValid || legacyLight.type == LightType.Directional);
-
-            if(!isUpdatedEveryFrame && gameObject.name.Contains("Cauldron"))
-            {
-                var index = 1;
-                int shadowRequestIndex = m_ShadowRequestIndices[index];
-                var dbgReq = manager.GetResolutionRequest(shadowMapType, shouldUseRequestFromCachedList, shouldUseRequestFromCachedList ? m_CachedResolutionRequestIndices[index] : shadowRequestIndex);
-                Debug.Log("Should use request from cached list " + shouldUseRequestFromCachedList + " has rendered? " + m_ShadowMapRenderedSinceLastRequest + " uses location maybe of " + dbgReq.atlasViewport);
-            }
 
             for (int index = 0; index < count; index++)
             {
