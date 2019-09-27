@@ -43,7 +43,7 @@ namespace UnityEngine.Rendering.HighDefinition
         HDShadowResolutionRequest[] m_SortedRequestsCache;
 
 
-        public int frameOfCacheValidity { get; private set; }
+        public int frameOfCacheValidity { get; set; }
         public int atlasShapeID { get; private set; }
 
         // TODO: This whole caching system needs to be refactored. At the moment there is lots of unecessary data being copied often. 

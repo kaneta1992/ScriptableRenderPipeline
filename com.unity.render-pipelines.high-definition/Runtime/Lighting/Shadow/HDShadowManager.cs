@@ -394,6 +394,22 @@ namespace UnityEngine.Rendering.HighDefinition
             return false;
         }
 
+        internal void InvalidateCachedData(ShadowMapType type)
+        {
+            switch (type)
+            {
+                case ShadowMapType.PunctualAtlas:
+                    m_Atlas.frameOfCacheValidity = 0;
+                    break;
+                case ShadowMapType.AreaLightAtlas:
+                    m_Atlas.frameOfCacheValidity = 0;
+                    break;
+                default:
+                    break;
+            }
+
+        }
+
         internal int GetAtlasShapeID(ShadowMapType type)
         {
             switch (type)

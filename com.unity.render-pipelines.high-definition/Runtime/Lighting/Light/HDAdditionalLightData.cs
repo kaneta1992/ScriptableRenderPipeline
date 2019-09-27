@@ -1464,12 +1464,13 @@ namespace UnityEngine.Rendering.HighDefinition
 
         private void DisableCachedShadowSlot()
         {
-            ShadowMapType shadowMapType = (lightTypeExtent == LightTypeExtent.Rectangle) ? ShadowMapType.AreaLightAtlas :
-                  (legacyLight.type != LightType.Directional) ? ShadowMapType.PunctualAtlas : ShadowMapType.CascadedDirectional;
-
             if (WillRenderShadowMap() && !ShadowIsUpdatedEveryFrame())
             {
+                ShadowMapType shadowMapType = (lightTypeExtent == LightTypeExtent.Rectangle) ? ShadowMapType.AreaLightAtlas :
+                                              (legacyLight.type != LightType.Directional) ? ShadowMapType.PunctualAtlas : ShadowMapType.CascadedDirectional;
+
                 HDShadowManager.instance.MarkCachedShadowSlotsAsEmpty(shadowMapType, GetInstanceID());
+                HDShadowManager.instance.InvalidateCachedData(shadowMapType);
                 m_ShadowMapRenderedSinceLastRequest = false;
             }
         }
