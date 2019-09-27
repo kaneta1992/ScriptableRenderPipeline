@@ -216,7 +216,7 @@ namespace UnityEngine.Rendering.HighDefinition
             int shadowIndex = -1;
             for(int i=0; i< m_ListOfCachedShadowRequests.Count; ++i)
             {
-                if(m_ListOfCachedShadowRequests[i].lightID == request.lightID && m_ListOfCachedShadowRequests[i].indexInLight == request.indexInLight)
+                if(!m_ListOfCachedShadowRequests[i].emptyRequest && m_ListOfCachedShadowRequests[i].lightID == request.lightID && m_ListOfCachedShadowRequests[i].indexInLight == request.indexInLight)
                 {
                     shadowIndex = i;
                     break;
