@@ -395,10 +395,12 @@ namespace UnityEngine.Rendering.HighDefinition
             switch (type)
             {
                 case ShadowMapType.PunctualAtlas:
-                    m_Atlas.PruneDeadCachedLightSlots();
+                    if(m_Atlas != null)
+                        m_Atlas.PruneDeadCachedLightSlots();
                     break;
                 case ShadowMapType.AreaLightAtlas:
-                    m_Atlas.PruneDeadCachedLightSlots();
+                    if (m_AreaLightShadowAtlas != null)
+                        m_AreaLightShadowAtlas.PruneDeadCachedLightSlots();
                     break;
                 default:
                     break;
