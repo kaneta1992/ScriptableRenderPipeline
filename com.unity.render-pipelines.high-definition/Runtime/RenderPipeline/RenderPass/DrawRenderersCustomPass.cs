@@ -83,7 +83,7 @@ namespace UnityEngine.Rendering.HighDefinition
                 rendererConfiguration = PerObjectData.None,
                 renderQueueRange = GetRenderQueueRange(renderQueueType),
                 sortingCriteria = sortingCriteria,
-                excludeObjectMotionVectors = true,
+                excludeObjectMotionVectors = false,
                 overrideMaterial = (overrideMaterial != null) ? overrideMaterial : defaultOverrideMaterial,
                 overrideMaterialPassIndex = (overrideMaterial != null) ? overrideMaterialPassIndex : 0,
                 layerMask = layerMask,
