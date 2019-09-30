@@ -52,10 +52,10 @@ namespace UnityEngine.Rendering.HighDefinition
 
         internal struct RenderTargets
         {
-            public RTHandle  cameraColorBuffer;
-            public RTHandle  cameraDepthBuffer;
-            public RTHandle  customColorBuffer;
-            public RTHandle  customDepthBuffer;
+            public RTHandle cameraColorBuffer;
+            public RTHandle cameraDepthBuffer;
+            public RTHandle customColorBuffer;
+            public RTHandle customDepthBuffer;
         }
 
         internal void ExecuteInternal(ScriptableRenderContext renderContext, CommandBuffer cmd, HDCamera camera, CullingResults cullingResult, RenderTargets targets)

@@ -47,16 +47,23 @@ namespace UnityEngine.Rendering.HighDefinition
 
         void OnDisable() => UnRegister(this);
 
-        internal void Execute(ScriptableRenderContext renderContext, CommandBuffer cmd, HDCamera hdCamera, CullingResults cullingResult, CustomPass.RenderTargets targets)
+        internal bool Execute(ScriptableRenderContext renderContext, CommandBuffer cmd, HDCamera hdCamera, CullingResults cullingResult, CustomPass.RenderTargets targets)
         {
+            bool executed = false;
+
             Shader.SetGlobalFloat(HDShaderIDs._CustomPassInjectionPoint, (float)injectionPoint);
 
             foreach (var pass in customPasses)
             {
                 if (pass != null && pass.enabled)
                     using (new ProfilingSample(cmd, pass.name))
+                    {
                         pass.ExecuteInternal(renderContext, cmd, hdCamera, cullingResult, targets);
+                        executed = true;
+                    }
             }
+
+            return executed;
         }
 
         internal void CleanupPasses()
