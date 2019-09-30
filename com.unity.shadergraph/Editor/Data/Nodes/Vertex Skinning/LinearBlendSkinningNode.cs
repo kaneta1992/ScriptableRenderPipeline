@@ -43,7 +43,7 @@ namespace UnityEditor.ShaderGraph
 
         public bool RequiresVertexSkinning(ShaderStageCapability stageCapability = ShaderStageCapability.All)
         {
-            return stageCapability == ShaderStageCapability.Vertex ||  stageCapability == ShaderStageCapability.All;
+            return true;
         }
 
         public NeededCoordinateSpace RequiresPosition(ShaderStageCapability stageCapability = ShaderStageCapability.All)
