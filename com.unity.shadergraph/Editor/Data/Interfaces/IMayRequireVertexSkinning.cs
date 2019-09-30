@@ -9,7 +9,7 @@ namespace UnityEditor.ShaderGraph
 
     static class MayRequireVertexSkinningExtensions
     {
-        public static bool RequiresMayRequireVertexSkinning(this ISlot slot)
+        public static bool RequiresVertexSkinning(this ISlot slot)
         {
             var mayRequireVertexSkinning = slot as IMayRequireVertexSkinning;
             return mayRequireVertexSkinning != null && mayRequireVertexSkinning.RequiresVertexSkinning();
