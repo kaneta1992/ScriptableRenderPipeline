@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [8.0.0] - 2019-XX-XX
 
+### Fixed
+- Fixed issue with rectangular area light when seen from the back
+
 ## [7.1.1] - 2019-09-05
 
 ### Added
