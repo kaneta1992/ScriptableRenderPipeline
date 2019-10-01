@@ -155,20 +155,20 @@ float3 _Transform_Out = GetCameraRelativePositionWS(In);
 **Absolute World > Object**
 
 ```
-float3 _Transform_Out = TransformWorldToObject(In);
+float3 _Transform_Out = TransformWorldToObject(GetCameraRelativePositionWS(In));
 ```
 
 **Absolute World > Tangent**
 
 ```
 float3x3 tangentTransform_World = float3x3(IN.WorldSpaceTangent, IN.WorldSpaceBiTangent, IN.WorldSpaceNormal);
-float3 _Transform_Out = TransformWorldToTangent(In, tangentTransform_World);
+float3 _Transform_Out = TransformWorldToTangent(GetCameraRelativePositionWS(In), tangentTransform_World);
 ```
 
 **Absolute World > View**
 
 ```
-float3 _Transform_Out = TransformWorldToView(In)
+float3 _Transform_Out = TransformWorldToView(GetCameraRelativePositionWS(In))
 ```
 **Absolute World > Absolute World**
 
